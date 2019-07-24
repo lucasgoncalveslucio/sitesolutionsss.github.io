@@ -1,0 +1,77 @@
+﻿@model PontoMap.Models.Usuario
+@Styles.Render("~/bundles/customCss")
+@{
+    ViewBag.Title = "Adicionar Usuário";
+}
+
+
+
+
+<div class="row formContainer">
+
+    <div class="main-login main-center">
+        <h3 class="text-center">Novo usuário</h3>
+
+
+        @using (Html.BeginForm("Create", "Usuario", FormMethod.Post))
+        {
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.NmUsuario)
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
+                    @Html.TextBoxFor(m => m.NmUsuario, new { @class = "form-control" })
+                </div>
+                @Html.ValidationMessageFor(m => m.NmUsuario, "", new { @class = "text-danger text-center col-md-12" })
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.DtNascimento)
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                    @Html.TextBoxFor(m => m.DtNascimento, new { @class = "form-control data"})
+                </div>
+                @Html.ValidationMessageFor(m => m.DtNascimento, "", new { @class = "text-danger text-center col-md-12", @id = "DtNascimentoValidationMessage" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.DsEmail)
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-envelope" aria-hidden="true"></i></span>
+                    @Html.TextBoxFor(m => m.DsEmail, new { @class = "form-control" })
+                </div>
+                @Html.ValidationMessageFor(m => m.DsEmail, "", new { @class = "text-danger text-center col-md-12" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.CdCpf)
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-asterisk" aria-hidden="true"></i></span>
+                    @Html.TextBoxFor(m => m.CdCpf, new { @class = "form-control cpf" })
+                </div>
+                @Html.ValidationMessageFor(m => m.CdCpf, "", new { @class = "text-danger text-center col-md-12" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.DsCelular)
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-phone" aria-hidden="true"></i></span>
+                    @Html.TextBoxFor(m => m.DsCelular, new { @class = "form-control cel" })
+                </div>
+                @Html.ValidationMessageFor(m => m.DsCelular, "", new { @class = "text-danger text-center col-md-12" })
+            </div>
+
+            <div class="form-group text-center">
+                <div class="alert alert-danger">
+                    <strong>Aviso: </strong>A senha do usuário é o seu CPF, apenas os digitos.
+                </div>
+                <input type="submit" value="Cadastrar" class="btn btn-primary btn-lg btn-block login-button center-block" />
+            </div>
+        }
+    </div>
+
+
+</div>

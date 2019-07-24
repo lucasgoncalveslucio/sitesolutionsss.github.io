@@ -1,0 +1,61 @@
+﻿<style>
+    .thead-inverse {
+        background-color: #52B3D9;
+        color: #FFF;
+        padding-bottom: 4px;
+        padding-top: 4px;
+    }
+
+    tr:nth-child(2n+2) {
+        background: #ccc;
+    }
+</style>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+@{
+    ViewBag.Title = "WebGrid Example";
+    var grid = new WebGrid(source: Model, canSort: true);
+}
+<div class="gridContainer">
+    
+    @if (Model == null)
+    {
+        return;
+    }
+    @grid.GetHtml(
+        tableStyle: "table",
+        headerStyle: "thead-inverse",
+        columns:
+            grid.Columns(
+                grid.Column(columnName: "DsCnpj", header: "CNPJ", format: @<text>@item.DsCnpj</text>),
+                grid.Column(columnName: "DsRazaoSocial", header: "RAZÃO SOCIAL", format: @<text>@item.DsRazaoSocial</text>)
+                ))
+</div>
+
+
+<!-- Modal -->
+<div id="empresaModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+

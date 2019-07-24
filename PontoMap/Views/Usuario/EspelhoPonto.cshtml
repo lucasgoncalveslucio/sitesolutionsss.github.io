@@ -1,0 +1,95 @@
+﻿@model PontoMap.ViewModel.RelatorioPontoViewModel
+
+@{
+    ViewBag.Title = "Relatorios";
+}
+
+<style>
+    .form-horizontal .control-label {
+        text-align: left;
+    }
+
+    .col-centered {
+        float: none;
+        margin: 0 auto;
+    }
+</style>
+
+<h2>Relatorios</h2>
+
+<div class="row" style="background-color: #e4e4e4; padding:80px 0 25px 0;">
+    <div class="col-sm-3 form-inline">
+        <label for="selectTipoRelatorio">Tipo de Relatório</label>
+        <div class="input-group">
+            <select id="selectTipoRelatorio" class="form-control form-control-sm">
+                <option value="0" selected disabled>SELECIONE</option>
+                <option value="grid" selected>GRID</option>
+                <option value="pdf" selected>PDF</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-3  form-inline">
+        <label for="dtInicial">Data Inicial</label>
+        <div class="input-group">
+            <input id="dtInicial" type="text" class="data form-control" size="6" value="10/09/2017" />
+        </div>
+    </div>
+
+    <div class="col-sm-3  form-inline">
+        <label for="dtInicial">Data Final</label>
+        <div class="input-group">
+            <input id="dtFinal" type="text" class="data form-control" size="6" value="10/11/2017" />
+        </div>
+    </div>
+
+    <div class="col-sm-1  form-inline">
+        <div class="input-group">
+            <button type="button" class="btn btn-info" onclick="gerarRelatorio()"><i class="fa fa-search-plus" aria-hidden="true"></i></button>
+        </div>
+    </div>
+</div>
+
+<div id="relContent"></div>
+
+<script>
+    function gerarRelatorio() {
+
+        var tipoRel = $("#selectTipoRelatorio").val();
+        var dtInicial = moment($("#dtInicial").val(), 'DD.MM.YYYY').format('MM.DD.YYYY');
+        var dtFinal = moment($("#dtFinal").val(), 'DD.MM.YYYY').format('MM.DD.YYYY');
+
+        if (!validaInicialFinal(dtInicial, dtFinal)) {
+            alert("Data Inicial deve ser maior que a final");
+            $("#dtInicial").focus();
+
+            return;
+        }
+
+        if (tipoRel === "pdf"){
+            window.open('@Url.Action("GetRel", "Relatorio")' + '?dtInicial=' + dtInicial + '&dtFinal=' + dtFinal + '&idUsuario=' + @Model.Usuario.IdUsuario + '&tipoRel=' + tipoRel, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
+            return;
+        }
+
+        var data = JSON.stringify({
+            'tipoRel': tipoRel,
+            'dtInicial': dtInicial,
+            'dtFinal': dtFinal,
+            'idUsuario':@Model.Usuario.IdUsuario
+            });
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("GetRel", "Relatorio")' + '?dtInicial=' + dtInicial + '&dtFinal=' + dtFinal + '&idUsuario=' + @Model.Usuario.IdUsuario + '&tipoRel=' + tipoRel,
+            data: data,
+            contentType: "application/json",
+            dataType: "html",
+            success: function (response) {
+                $('#relContent').html(response);
+            },
+            failure: function (response) {
+                alert(response.d);
+            }
+        });
+
+    }
+</script>

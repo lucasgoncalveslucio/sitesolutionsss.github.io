@@ -1,0 +1,235 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>@ViewBag.Title - ERP Oficinas Mecânicas</title>
+
+    @Styles.Render("~/bundles/nineStarsCss")
+    @Styles.Render("~/bundles/customCss")
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <style>
+        .gridContainer {
+            margin-top: 80px;
+        }
+
+        .formContainer {
+            margin: 100px 0 10px 0;
+        }
+    </style>
+
+</head>
+
+<body data-spy="scroll">
+    <div class="container">
+        <ul id="gn-menu" class="gn-menu-main">
+            <li class="gn-trigger">
+                <a id="gn-icon-menu" class="gn-icon gn-icon-menu"><span>Menu</span></a>
+                <nav id="gn-menu-wrapper" class="gn-menu-wrapper">
+                    <div class="gn-scroller">
+                        <ul class="gn-menu">
+                            @switch (Session["Role"] != null ? Session["Role"].ToString() : "")
+                            {
+                                case "master":
+                                    <li>
+                                        <a href="@Url.Action("Index", "Empresa")" class="gn-icon gn-icon-about"> Empresas</a>
+                                    </li>
+                                    break;
+                                case "admin":
+                                    <li>
+                                        <a href="@Url.Action("Index", "Usuario")" class="gn-icon gn-icon-usuarios"> Usuários</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("EspelhoPonto", "Usuario")" class="gn-icon gn-icon-relogio"> Espelho de Ponto</a>
+                                    </li>
+                                    break;
+
+                                case "funcionario":
+                                    <li>
+                                        <a href="@Url.Action("EspelhoPonto", "Usuario")" class="gn-icon gn-icon-relogio"> Espelho de Ponto</a>
+                                    </li>
+                                    break;
+                                default:
+                                    if (ViewContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString() == "Home")
+                                    {
+                                        <li>
+                                            <a onclick="fecharMenu();" href="#about" class="gn-icon gn-icon-about"> Sobre</a>
+                                        </li>
+                                        <li><a onclick="fecharMenu();" href="#service" class="gn-icon gn-icon-cog">Serviços</a></li>
+                                        @*<li><a href="#works" class="gn-icon gn-icon-help">Clientes</a></li>*@
+                                        <li>
+                                            <a onclick="fecharMenu();" href="#contact" class="gn-icon gn-icon-archive">Contato</a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <a onclick="fecharMenu();" href="@Url.Action("Index", "Home")#about" class="gn-icon gn-icon-about"> Sobre</a>
+                                        </li>
+                                        <li><a onclick="fecharMenu();" href="@Url.Action("Index", "Home")#service" class="gn-icon gn-icon-cog">Serviços</a></li>
+                                        @*<li><a href="@Url.Action("Index", "Home")#works" class="gn-icon gn-icon-help">Clientes</a></li>*@
+                                        <li>
+                                            <a onclick="fecharMenu();" href="@Url.Action("Index", "Home")#contact" class="gn-icon gn-icon-archive">Contato</a>
+                                        </li>
+                                    }
+                                    break;
+                            }
+
+
+
+
+
+
+                        </ul>
+                    </div><!-- /gn-scroller -->
+                </nav>
+            </li>
+
+            <li>
+            </li>
+
+            <li>@Html.ActionLink("Solutions Service Auto", "Index", "Home")</li>
+            @if (ViewContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString() != "Home")
+            {
+                <li style="min-width: 200px; border: none;">
+                    <span class="alert alert-info" id="breadcrumbs">
+                        @Html.ActionLink("Home", "Index", "Home")
+                        @if (ViewContext.RouteData.Values["controller"].ToString() != "Home")
+                        {
+                            @:/ @Html.ActionLink(ViewContext.RouteData.Values["controller"].ToString(), "Index", ViewContext.RouteData.Values["controller"].ToString())
+                        }
+                        @if (ViewContext.RouteData.Values["action"].ToString() != "Index")
+                        {
+                            @:/ @Html.ActionLink(ViewContext.RouteData.Values["action"].ToString(), ViewContext.RouteData.Values["action"].ToString(), ViewContext.RouteData.Values["controller"].ToString())
+                        }
+                    </span>
+                </li>
+            }
+            <li class="hidden-xs">
+                <ul class="company-social">
+                    @if (Session["Nome"] != null)
+                    {
+                        <li>
+                            <strong> Logado como:</strong>&nbsp;&nbsp;&nbsp; @Session["Nome"]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </li>
+                        <li>
+                            <a href='@Url.Action("LogOut", "Account")' style="background-color: #fff; width: 60px; margin-right: 20px;">
+                                <button type="button" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-log-out"></span> Sair
+                                </button>
+                            </a>
+                        </li>
+                    }
+                    <li class="social-facebook"><a href="#" target="_blank"><i class="fa fa-facebook"></i></a></li>
+                    <li class="social-twitter"><a href="#" target="_blank"><i class="fa fa-twitter"></i></a></li>&nbsp;&nbsp;&nbsp;
+                    @*<li class="social-dribble"><a href="#" target="_blank"><i class="fa fa-dribbble"></i></a></li>
+                        <li class="social-google"><a href="#" target="_blank"><i class="fa fa-google-plus"></i></a></li>*@
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+    @RenderBody()
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <p>&copy; Ponto Map - Brasil</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/customScripts")
+    @Scripts.Render("~/bundles/nineStarsJs")
+    @RenderSection("scripts", required: false)
+</body>
+
+</html>
+
+<script>
+    //mascasras
+    VMasker($('.data')).maskPattern('99/99/9999');
+    VMasker($('.cpf')).maskPattern('999.999.999-99');
+    VMasker($('.cel')).maskPattern('(99) 999999999');
+    VMasker($('.cnpj')).maskPattern('99.999.999/9999-99');
+
+    var message = "@TempData["message"]";
+
+    if (message !== "") {
+        $.notify({
+            // options
+            message: '@TempData["message"]'
+        },
+            {
+                // settings
+                type: 'success',
+                placement: {
+                    from: "top",
+                    align: "center"
+                },
+                delay: 500
+            });
+    }
+
+
+    $('.data').on('blur', function () {
+        validaDATA(this);
+    });
+
+
+    1
+    $(".data").datepicker({
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+        dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+        dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+        monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+        monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+        nextText: 'Proximo',
+        prevText: 'Anterior'
+    });
+
+    function fecharMenu() {
+        $("#gn-icon-menu").toggleClass('gn-selected');
+        $("#gn-menu-wrapper").toggleClass('gn-open-all');
+    }
+
+    $.validator.addMethod("customvalidationcpf",
+        function (value, element, param) {
+            return validaCPF(value); //chama um método validaCPF implementado em javascript
+        });
+    $.validator.unobtrusive.adapters.addBool("customvalidationcpf");
+
+
+    $.validator.addMethod("customvalidationcnpj",
+        function (value, element, param) {
+            return validaCNPJ(value); //chama um método validaCNPJ implementado em javascript
+        });
+    $.validator.unobtrusive.adapters.addBool("customvalidationcnpj");
+</script>
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAedrqfxnFQb4nSFF4EkRXi60sZ00774fI&callback=initMap">
+</script>
+
+<script>
+    var geocoder;
+    function initMap() {
+        geocoder = new google.maps.Geocoder;
+    }
+</script>
+
+
+
+
+
